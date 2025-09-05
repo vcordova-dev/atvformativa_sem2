@@ -1,5 +1,5 @@
 import pandas as pd
-import matplotlib.pyplot as plt # importando a biblioteca
+import matplotlib.pyplot as plt
 
 # ---------- Dados ----------
 custos = {
@@ -12,43 +12,43 @@ custos = {
 }
 
 # ---------- Criar DataFrame ----------
-df = pd.DataFrame([
-    {"Categoria": k, "Valor (R$)": v} for k, v in custos.items()
-])
+df = pd.DataFrame([{"Categoria": k, "Valor (R$)": v} for k, v in custos.items()])
 
 # Adicionar linha de total
-total = pd.DataFrame([{
-    "Categoria": "TOTAL",
-    "Valor (R$)": df["Valor (R$)"].sum()
-}])
+total = pd.DataFrame([{"Categoria": "TOTAL", "Valor (R$)": df["Valor (R$)"].sum()}])
 df = pd.concat([df, total], ignore_index=True)
 
-# Criar coluna formatada para exibição
-df["Valor Formatado"] = df["Valor (R$)"].apply(lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+# Coluna formatada
+df["Valor Formatado"] = df["Valor (R$)"].apply(
+    lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+)
 
-# ---------- Mostrar tabela no console ----------
+# ---------- Mostrar tabela ----------
 print(df[["Categoria", "Valor Formatado"]].to_string(index=False))
 
-# ---------- Preparar dados para gráficos ----------
+# ---------- Preparar dados para gráfico ----------
 df_plot = df[df["Categoria"] != "TOTAL"].copy()
+valores = df_plot["Valor (R$)"]
+categorias = df_plot["Categoria"]
 
-# ---------- Gráfico de Pizza ----------
-plt.figure(figsize=(6, 6))
-plt.pie(
-    df_plot["Valor (R$)"],
-    labels=df_plot["Categoria"],
-    autopct="%1.1f%%",
-    startangle=90
-)
-plt.title("Distribuição dos Custos Mensais")
-plt.tight_layout()
-plt.show()
+# ---------- Gráfico combinado ----------
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
 
-# ---------- Gráfico de Barras ----------
-plt.figure(figsize=(8, 5))
-plt.bar(df_plot["Categoria"], df_plot["Valor (R$)"])
-plt.title("Custos Mensais por Categoria")
-plt.ylabel("Valor (R$)")
-plt.xticks(rotation=30, ha="right")
+# Pizza
+ax1.pie(valores, labels=categorias, autopct="%1.1f%%", startangle=90, colors=plt.cm.tab20.colors)
+ax1.set_title("Distribuição dos Custos (Pizza)", fontsize=14)
+
+# Barras
+bars = ax2.bar(categorias, valores, color=plt.cm.tab20.colors)
+ax2.set_title("Custos Mensais por Categoria", fontsize=14)
+ax2.set_ylabel("Valor (R$)")
+ax2.set_xticklabels(categorias, rotation=30, ha="right")
+
+# Adicionar valores nas barras
+for bar in bars:
+    height = bar.get_height()
+    ax2.text(bar.get_x() + bar.get_width()/2, height + 10, f"R$ {height:,.0f}".replace(",", "X").replace(".", ",").replace("X", "."), 
+             ha='center', va='bottom', fontsize=10)
+
 plt.tight_layout()
 plt.show()
