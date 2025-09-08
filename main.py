@@ -35,14 +35,15 @@ categorias = df_plot["Categoria"]
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
 
 # Pizza
-ax1.pie(valores, labels=categorias, autopct="%1.1f%%", startangle=90, colors=plt.cm.tab20.colors)
+ax1.pie(valores, labels=categorias, autopct="%1.1f%%", startangle=90, colors=plt.cm.get_cmap("tab20").colors)
 ax1.set_title("Distribuição dos Custos (Pizza)", fontsize=14)
 
 # Barras
-bars = ax2.bar(categorias, valores, color=plt.cm.tab20.colors)
+bars = ax2.bar(categorias, valores, color=plt.cm.get_cmap("tab20").colors)
 ax2.set_title("Custos Mensais por Categoria", fontsize=14)
 ax2.set_ylabel("Valor (R$)")
-ax2.set_xticklabels(categorias, rotation=30, ha="right")
+ax2.tick_params(axis="x", rotation=30)
+
 
 # Adicionar valores nas barras
 for bar in bars:
