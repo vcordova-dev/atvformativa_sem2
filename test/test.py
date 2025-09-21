@@ -26,14 +26,13 @@ def test_dataframe_total():
     assert total_linha == sum(main.custos.values())
 
 def test_valor_formatado():
-    """
-    Verifica se os valores estão formatados corretamente
-    """
     df = main.df
     exemplo = df[df["Categoria"] == "Alimentação"]["Valor Formatado"].iloc[0]
     assert exemplo.startswith("R$ ")
-    assert "," in exemplo  # separador decimal
-    assert "." in exemplo  # separador de milhar, se aplicável
+    assert "," in exemplo  
+    
+    if int(main.custos["Alimentação"]) >= 1000:
+        assert "." in exemplo
 
 def test_dataframe_colunas():
     """
