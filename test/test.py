@@ -9,9 +9,7 @@ import main
 
 
 def test_custos_existem():
-    """
-    Verifica se o dicionário de custos possui categorias esperadas
-    """
+   
     custos = main.custos
     assert "Alimentação" in custos
     assert "Moradia (parcela da criança: água, luz, internet, aluguel)" in custos
